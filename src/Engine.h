@@ -14,6 +14,8 @@
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include "Player.h"
+#include "Sprite.h"
+#include <vector>
 
 class Engine
 {
@@ -43,7 +45,6 @@ private:
 
 	SDL_Surface *screen; // Superficie que se dibujará en pantalla
 	Stage stage; // Circuito sobre el cual se desarrolla la carrera
-	Player player; // Coche que manejará el usuario
 };
 
 #endif /*ENGINE_H_*/

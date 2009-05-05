@@ -57,6 +57,9 @@ public:
 	 */
 	SDL_Surface* getTrackImage();
 
+
+	void paint(SDL_Surface *screen, int x, int y);
+
 	/**
 	 * Destructor. Libera la memoria usada por la superficie que alacena la imagen del circuito
 	 */

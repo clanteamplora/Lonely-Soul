@@ -16,8 +16,6 @@ Engine::Engine()
 	sdlInit();
 	stage.setName("prueba");
 	stage.loadTrack();
-	player.setName("p1");
-	player.loadPlayerImage("red2.png");
 }
 
 /**
@@ -32,21 +30,32 @@ Engine::~Engine()
 */
 int Engine::mainLoop()
 {
-	std::cout << "entra a main loop" << std::cout;
 	SDL_Event evento; // Variable de eventos
 	Uint8 *teclado; // Vector vector de almacenamiento del estado del teclado
 
-	TTF_Init();
+	/*TTF_Init();
 	Uint32 time = SDL_GetTicks(); //Tiempo transcurrido
 	SDL_Color textColor = { 0xF0, 0xFF, 0xF0 };
-	TTF_Font *font = TTF_OpenFont( "lazy.ttf", 36 );
+	TTF_Font *font = TTF_OpenFont( "lazy.ttf", 14 );*/
 
     SDL_Rect cTrack = {0, 0, 800, 600}; //Coordenadas y tamaño de la imagen del circuito que se mostrará en el frame actual
-
 	// Posición del coche
 	SDL_Rect pos_pj;
 	pos_pj.x = 300;
 	pos_pj.y = 300;
+
+	// Creamos el jugador
+	Sprite pj1;
+	//Sprite pj1("Sprites/player.png", 140, 92, "player1");
+	pj1.loadSpriteFile("Sprites/player.txt");
+	/*std::vector<unsigned int> secuencia;
+	for (unsigned int i = 11; i < 19; i++)
+		secuencia.push_back(i);
+	pj1.loadAction("walk", secuencia);
+
+	std::vector<unsigned int> stand;
+	stand.push_back(1);
+	pj1.loadAction("stand", stand);*/
 
 
     for(;;)
@@ -66,24 +75,35 @@ int Engine::mainLoop()
     	teclado = SDL_GetKeyState(NULL);
 
     	//Actualizamos posición del pj
-    	pos_pj.x -= teclado[SDLK_LEFT] ? 10 : 0;
-    	pos_pj.x += teclado[SDLK_RIGHT] ? 10 : 0;
+    	/*pos_pj.x -= teclado[SDLK_LEFT] ? 10 : 0;
+    	pos_pj.x += teclado[SDLK_RIGHT] ? 10 : 0;*/
+
+    	//Actualizamos posición del pj
+    	cTrack.x -= teclado[SDLK_LEFT] ? 10 : 0;
+    	cTrack.x += teclado[SDLK_RIGHT] ? 10 : 0;
 
     	//Actualizamos el scroll
-    	SDL_BlitSurface(stage.getScreen(cTrack), &cTrack, screen, &cTrack);
+    	stage.paint(screen, cTrack.x, cTrack.y);
+    	//SDL_BlitSurface(stage.getScreen(cTrack), &cTrack, screen, &dRect);
 
     	//Dibujamos el pj
-    	//SDL_BlitSurface(player.carImage, NULL, screen, NULL);
-    	SDL_BlitSurface(player.carImage, NULL, screen, &pos_pj);
+    	if (teclado[SDLK_LEFT] || teclado[SDLK_RIGHT])
+    		pj1.execute("walk");
+    	else
+    	{
+    		pj1.execute("stand");
+    		pj1.reset("walk");
+    	}
+    	pj1.paint(screen, 300, 300);
 
     	//Muestra contador de tiempo
-    	std::stringstream text;
-    	text << "TIEMPO: " << SDL_GetTicks() - time;
+    	//std::stringstream text;
+    	//text << "TIEMPO: " << SDL_GetTicks() - time;
 
-    	SDL_Surface* mierda = TTF_RenderText_Solid(font, text.str().c_str(), textColor);
-    	SDL_BlitSurface( mierda, NULL, screen, NULL);
-    	SDL_FreeSurface( mierda );
-    	text.flush();
+    	//SDL_Surface* mierda = TTF_RenderText_Solid(font, text.str().c_str(), textColor);
+    	//SDL_BlitSurface( mierda, NULL, screen, NULL);
+    	//SDL_FreeSurface( mierda );
+    	//text.flush();
 
     	SDL_Flip(screen); //Actualizamos pantalla
     	SDL_Delay(100); //ChAPUZA, esperamos 1 decima de segundo
@@ -113,7 +133,7 @@ bool Engine::sdlInit()
     }
 
     // Personalizamos el titulo de la ventana
-    SDL_WM_SetCaption("CCarTest", NULL);
+    SDL_WM_SetCaption("Lonely Soul", NULL);
 
     return 0;
 }

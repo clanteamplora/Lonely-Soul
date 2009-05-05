@@ -54,12 +54,23 @@ bool Stage::loadTrack()
  * @param clip Especifica la porción de la imagen del circuito que se devolverá
  * @return porción de la imagen del circuito
  */
+
 SDL_Surface* Stage::getScreen(SDL_Rect &clip)
 {
     SDL_Surface *tmpS = SDL_CreateRGBSurface(SDL_HWSURFACE, 800, 600, 16, 0, 0, 0, 0); //Superficie resultante
-    SDL_BlitSurface(trackImage, &clip, tmpS, NULL);
+    SDL_Rect dRect = {0, 0, 800, 600};
+    SDL_BlitSurface(trackImage, &clip, tmpS, &dRect);
 
     return tmpS;
+}
+
+
+//stage.paint(screen, cTrack.x, cTrack.y);
+void Stage::paint(SDL_Surface *screen, int x, int y)
+{
+	SDL_Rect origen = {x, y, 800, 600};
+	SDL_Rect destino = {0, 0, 800, 600};
+	SDL_BlitSurface(trackImage, &origen, screen, &destino);
 }
 
 /**
